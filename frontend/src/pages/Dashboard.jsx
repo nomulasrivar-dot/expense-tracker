@@ -26,7 +26,7 @@ const Dashboard = () => {
       const config = {
         headers: { Authorization: `Bearer ${user.token}` }
       };
-      const { data } = await axios.get('http://localhost:5000/api/expenses', config);
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/expenses`, config);
       setExpenses(data);
     } catch (error) {
       console.error('Error fetching expenses', error);
@@ -39,7 +39,7 @@ const Dashboard = () => {
       const config = {
         headers: { Authorization: `Bearer ${user.token}` }
       };
-      const { data } = await axios.post('http://localhost:5000/api/expenses', 
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/expenses`, 
         { title, amount: Number(amount), category }, 
         config
       );
@@ -106,7 +106,7 @@ const Dashboard = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div className="card">
               <h3 className="card-title">Total Expenses</h3>
-              <div className="stat-value">${totalExpenses.toFixed(2)}</div>
+              <div className="stat-value">₹{totalExpenses.toFixed(2)}</div>
             </div>
 
             <div className="card" style={{ height: '300px' }}>
@@ -133,7 +133,7 @@ const Dashboard = () => {
                       ))}
                     </Pie>
                     <RechartsTooltip 
-                      formatter={(value) => `$${value.toFixed(2)}`}
+                      formatter={(value) => `₹${value.toFixed(2)}`}
                       contentStyle={{ backgroundColor: 'var(--surface-color)', borderColor: 'var(--surface-color-light)', color: 'var(--text-main)', borderRadius: '8px' }}
                     />
                     <Legend />
@@ -154,7 +154,7 @@ const Dashboard = () => {
                         <h4>{expense.title}</h4>
                         <p>{expense.category} • {new Date(expense.date).toLocaleDateString()}</p>
                       </div>
-                      <div className="expense-amount">-${expense.amount.toFixed(2)}</div>
+                      <div className="expense-amount">-₹{expense.amount.toFixed(2)}</div>
                     </div>
                   ))
                 )}
@@ -182,7 +182,7 @@ const Dashboard = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Amount ($)</label>
+                  <label className="form-label">Amount (₹)</label>
                   <input 
                     type="number" 
                     step="0.01"
