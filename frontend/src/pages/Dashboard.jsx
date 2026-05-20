@@ -53,7 +53,7 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('userInfo');
-    navigate('/login');
+    window.location.href = '/login';
   };
 
   const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);

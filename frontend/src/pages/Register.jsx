@@ -13,7 +13,7 @@ const Register = () => {
     try {
       const { data } = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
       localStorage.setItem('userInfo', JSON.stringify(data));
-      navigate('/');
+      window.location.href = '/';
     } catch (error) {
       alert(error.response?.data?.message || 'Registration failed');
     }
