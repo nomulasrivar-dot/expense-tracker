@@ -10,7 +10,7 @@ A full-stack web application designed to help users track their daily expenses, 
 ---
 
 ## ✨ Features
-*   **Secure Authentication:** User signup and login powered by JWT (JSON Web Tokens) and bcrypt password hashing.
+*   **Secure Authentication:** User signup and login powered by JWT (JSON Web Tokens), bcrypt password hashing, and **Google OAuth** for 1-click sign in.
 *   **Expense Management:** Add, view, and categorize your daily expenses seamlessly.
 *   **Interactive Dashboard:** A sleek, dark-mode Glassmorphism UI that feels premium and responsive.
 *   **Visual Analytics:** Dynamic pie charts built with Recharts to break down spending by category.
@@ -22,6 +22,7 @@ A full-stack web application designed to help users track their daily expenses, 
 ### Frontend
 *   **React (Vite):** Blazing fast frontend framework.
 *   **React Router:** For seamless single-page application navigation.
+*   **Google OAuth:** Secure 1-click social login via `@react-oauth/google`.
 *   **Recharts:** For data visualization and analytics.
 *   **Vanilla CSS:** Custom Glassmorphism styling without heavy UI libraries.
 *   **Axios:** For API HTTP requests.
@@ -74,6 +75,7 @@ npm install
 Create a `.env` file in the `frontend` folder and add the following variable:
 ```env
 VITE_API_URL=http://localhost:5000
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
 ```
 Start the frontend development server:
 ```bash

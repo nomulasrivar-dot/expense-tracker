@@ -1,6 +1,9 @@
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Register User
 export const registerUser = async (req, res) => {
@@ -60,6 +63,43 @@ export const loginUser = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Google Login
+export const googleLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+    
+    // Verify Google Token
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { email, name } = payload;
+
+    // Check if user exists
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Create new user if they don't exist
+      user = await User.create({
+        name,
+        email,
+        // No password needed for Google auth users
+      });
+    }
+
+    res.json({
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id)
+    });
+    
+  } catch (error) {
+    res.status(401).json({ message: 'Invalid Google Token', error: error.message });
   }
 };
 

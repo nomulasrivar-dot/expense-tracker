@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,6 +16,18 @@ const Login = () => {
       window.location.href = '/';
     } catch (error) {
       alert(error.response?.data?.message || 'Login failed');
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/google`, {
+        token: credentialResponse.credential
+      });
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      window.location.href = '/';
+    } catch (error) {
+      alert(error.response?.data?.message || 'Google Login failed');
     }
   };
 
@@ -48,6 +61,12 @@ const Login = () => {
           </div>
           <button type="submit" className="btn-primary">Sign In</button>
         </form>
+        <div style={{ margin: '1.5rem 0', display: 'flex', justifyContent: 'center' }}>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => alert('Google Login Failed')}
+          />
+        </div>
         <div className="auth-footer">
           Don't have an account? <Link to="/register">Sign up</Link>
         </div>
