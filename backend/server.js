@@ -2,8 +2,13 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import authRoutes from './routes/auth.js';
 import expenseRoutes from './routes/expense.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -20,9 +25,18 @@ const MONGODB_URI = process.env.MONGODB_URI;
 app.use('/api/auth', authRoutes);
 app.use('/api/expenses', expenseRoutes);
 
-app.get('/', (req, res) => {
-  res.send('Expense Tracker API is running...');
-});
+// Serve Frontend in Production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'));
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.send('Expense Tracker API is running...');
+  });
+}
 
 // Database Connection & Server Start
 if (!MONGODB_URI || MONGODB_URI === 'your_mongodb_connection_string_here') {
